@@ -7,7 +7,7 @@ def root_handler(request):
 
 
 def services_handler(request):
-    return HttpResponse("Service page!")
+    return render(request, "services.html")
 
 
 def service_id_handler(request, service_id):
@@ -15,7 +15,7 @@ def service_id_handler(request, service_id):
 
 
 def specialist_handler(request):
-    return HttpResponse("Specialist page")
+    return render(request, "specialist.html")
 
 
 def specialist_id_handler(request, specialist_id):
@@ -47,8 +47,8 @@ def panel_specialist_id_page(request):
 
 
 def login_handler(request):
-    return HttpResponse("login_handler")
+    return render(request, "login.html")
 
 
 def register_handler(request):
-    return HttpResponse("register_handler")
+    return render(request, "register.html")
