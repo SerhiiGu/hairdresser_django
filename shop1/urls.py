@@ -7,7 +7,7 @@ urlpatterns = [
     path('services/', shop1.views.services_handler, name='services'),
     path('services/<int:service_id>/', shop1.views.service_id_handler),
     path('specialist/', shop1.views.specialist_handler, name='specialist'),
-    path('specialist/<specialist_id>/', shop1.views.specialist_id_handler),
+    path('specialist/<int:specialist_id>/', shop1.views.specialist_id_handler),
     path('booking/', shop1.views.booking_handler),
     path('user/', shop1.views.user_page),
     path('panel/', shop1.views.panel_page),

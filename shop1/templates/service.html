@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %} Послуга {{service_name}} {% endblock %}
+
+{% block content %}
+<b>Послуга: </b> {{service_name}}
+<br><br>
+<b>Може виконуватися майстрами:</b>
+<br><br>
+{% for key, value in masters.items %}
+<a href="/specialist/{{ key }}/">{{ value }}</a><br>
+{% endfor %}
+
+{% endblock content %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %} Спеціаліст {{name}} {% endblock %}
+
+{% block content %}
+<b>Спеціаліст: </b> {{name}}
+<br><br>
+<b>Може виконувати послуги:</b>
+<br><br>
+{% for key, value in services.items %}
+<a href="/services/{{ key }}/">{{ value }}</a><br>
+{% endfor %}
+
+{% endblock content %}

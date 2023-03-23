@@ -3,5 +3,12 @@
 {% block title %} Спеціалісти {% endblock %}
 
 {% block content %}
-Спеціалісти
+
+<b>Наші спеціалісти:</b>
+<br><br>
+
+{% for key, value in masters.items %}
+<a href="/specialist/{{ key }}/">{{ value }}</a><br>
+{% endfor %}
+
 {% endblock content %}

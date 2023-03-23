@@ -3,5 +3,10 @@
 {% block title %} Список послуг {% endblock %}
 
 {% block content %}
-Послуги
+<b>Список доступних сервісів:</b>
+<br><br>
+{% for service, value in services_dict.items %}
+<a href="/services/{{ service }}/">{{ value }}</a><br>
+{% endfor %}
+
 {% endblock content %}
