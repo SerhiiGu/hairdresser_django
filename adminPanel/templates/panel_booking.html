@@ -1,0 +1,11 @@
+{% extends "panel_base.html" %}
+
+{% block title %} Admin Panel - Список бронювань {% endblock %}
+
+{% block content %}
+{% for booking in bookings %}
+    {{booking.master}}&emsp;
+    {{booking.service}}&emsp;
+    {{booking.date}}<br>
+{% endfor %}
+{% endblock content %}

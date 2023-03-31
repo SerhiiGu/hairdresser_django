@@ -29,7 +29,7 @@ class Booking(models.Model):
     master = models.ForeignKey(Master, on_delete=models.CASCADE)
     service = models.ForeignKey(Service, on_delete=models.CASCADE)
     client = models.IntegerField()
-    date = models.DateTimeField(auto_now=True)
+    date = models.DateTimeField()
 
     def __str__(self):
         return f'{self.master} {self.service} {self.client} {self.date}'
@@ -37,9 +37,9 @@ class Booking(models.Model):
 
 class Calendar(models.Model):
     master = models.ForeignKey(Master, on_delete=models.CASCADE)
-    date = models.DateTimeField(auto_now=True)
+    date = models.DateTimeField()
     time_start = models.TimeField()
     time_end = models.TimeField()
 
     def __str__(self):
-        return f'{self.master} {self.date}'
+        return f'{self.master}'

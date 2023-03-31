@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'shop1.apps.Shop1Config',
+    'adminPanel.apps.AdminpanelConfig',
 ]
 
 MIDDLEWARE = [

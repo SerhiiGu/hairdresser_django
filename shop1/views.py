@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.utils.timezone import utc
 
-from shop1.models import Service, Master, Calendar
+from shop1.models import Service, Master, Calendar, Booking
 
 
 def root_handler(request):
@@ -48,27 +48,22 @@ def specialist_id_handler(request, specialist_id):
 
 
 def booking_handler(request):
-    return HttpResponse("Booking page")
+    if request.method == 'POST':
+        booking = Booking(
+            master=Master.objects.get(id=request.POST['master']),
+            service=Service.objects.get(id=request.POST['service']),
+            # client=request.POST['client'],
+            client=1,
+            date=request.POST['date']
+        )
+        booking.save()
+    masters = Master.objects.all()
+    services = Service.objects.all()
+    return render(request, 'booking.html', {'masters': masters, 'services': services})
 
 
 def user_page(request):
     return HttpResponse("User page")
-
-
-def panel_page(request):
-    return HttpResponse("User panel page")
-
-
-def panel_booking_page(request):
-    return HttpResponse("panel_booking_page")
-
-
-def panel_specialist_page(request):
-    return HttpResponse("panel_specialist_page")
-
-
-def panel_specialist_id_page(request):
-    return HttpResponse("panel_specialist_id_page")
 
 
 def login_handler(request):

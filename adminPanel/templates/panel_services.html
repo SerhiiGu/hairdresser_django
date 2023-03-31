@@ -1,0 +1,33 @@
+{% extends "panel_base.html" %}
+
+{% block title %} Admin Panel - Керування послугами {% endblock %}
+
+{% block content %}
+<b>Список сервісів:</b>
+<br><br>
+<table>
+    <thead>
+    <tr>
+        <th>Сервіс</th>
+        <th>Ціна</th>
+        <th>Час</th>
+    </tr>
+    </thead>
+    <tbody>
+        {% for service in services %}
+        <tr>
+            <td>{{ service.name }}</td>
+            <td>{{ service.price }}</td>
+            <td>{{ service.time }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<form method="POST">
+    {% csrf_token %}
+    <input type="text" name="name" placeholder="Назва сервісу"><br>
+    <input type="number" name="price" placeholder="Ціна"><br>
+    <input type="number" name="time" placeholder="Час виконанння"><br>
+    <input type="submit" name="submit">
+</form>
+{% endblock content %}

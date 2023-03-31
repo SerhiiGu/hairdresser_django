@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %} Бронювання замовлення {% endblock %}
+
+{% block content %}
+<form method="POST">
+    {% csrf_token %}
+<!--    <input type="text" name="client" placeholder="Назвіться, будь-ласка"><br><br><br>-->
+    Записатися до спеціаліста:
+    <select name="master">
+        {% for master in masters %}
+        <option value="{{master.id}}">{{master.name}}</option>
+        {% endfor %} <br>
+    </select><br>
+
+    на послугу:
+    <select name="service">
+        {% for service in services %}
+        <option value="{{service.id}}">{{service.name}}</option>
+        {% endfor %} <br>
+    </select><br>
+    на дату:
+    <input type="datetime-local" name="date" placeholder="Дата"><br>
+    <input type="submit" name="submit">
+</form>
+
+<br><br><br>Список бронювань знаходиться в адмінпанелі
+{% endblock content %}

@@ -36,7 +36,7 @@ class Migration(migrations.Migration):
             name='Calendar',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date', models.DateTimeField(auto_now=True)),
+                ('date', models.DateTimeField()),
                 ('time_start', models.TimeField()),
                 ('time_end', models.TimeField()),
                 ('master', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='shop1.master')),
@@ -47,7 +47,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('client', models.IntegerField()),
-                ('date', models.DateTimeField(auto_now=True)),
+                ('date', models.DateTimeField()),
                 ('master', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='shop1.master')),
                 ('service', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='shop1.service')),
             ],

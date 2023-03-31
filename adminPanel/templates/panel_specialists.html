@@ -1,0 +1,42 @@
+{% extends "panel_base.html" %}
+
+{% block title %} Admin Panel - Список спеціалістів {% endblock %}
+
+{% block content %}
+<b>Список спеціалістів:</b>
+<br><br>
+
+{% for master in masters %}
+    <a href="/panel/specialist/{{ master.id }}/">{{ master.name }}</a>
+    {{ master.status }}
+    {{ master.phone }}
+    {{ master.rang }}<br> &emsp;&emsp;&emsp;
+    {% for service in master.services.all %}
+        {{ service.name }}
+    {% endfor %}
+<br>
+{% endfor %}
+
+<br><br>
+<b>Додати спеціаліста:</b>
+<br><br>
+
+<form method="POST">
+    {% csrf_token %}
+    <input type="text" name="name" placeholder="Ім'я та прізвище"><br>
+    <input type="text" name="phone" placeholder="Номер телефону"><br>
+    Статус: <select name="status">
+        <option value="1">Активний</option>
+        <option value="0">Неактивний</option>
+    </select><br>
+    Ранг: <select name="rang">
+        <option value="0">Rang 1</option>
+        <option value="1">Rang 2</option>
+    </select><br>
+    {% for service in services %}
+    {{service}}
+        <input type="checkbox" name="service_{{service.id}}" value="{{service.id}}" {{service.name}}>|
+    {% endfor %} <br>
+    <input type="submit" name="submit">
+</form>
+{% endblock content %}

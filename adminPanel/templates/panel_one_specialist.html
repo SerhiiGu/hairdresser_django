@@ -1,0 +1,33 @@
+{% extends "panel_base.html" %}
+
+{% block title %} Admin Panel - Карта спеціаліста {% endblock %}
+
+
+{% block content %}
+<b>Графік роботи спеціаліста <i>{{shedule|first}}</i>:</b><br><br>
+<table>
+    <thead>
+    <tr>
+        <th>Дата</th>
+        <th>Початок роботи</th>
+        <th>Кінець роботи</th>
+    </tr>
+    </thead>
+    <tbody>
+        {% for work_day in shedule %}
+        <tr>
+        <td style="border-style:solid;border-width:1px">{{work_day.date|date:"d-M-Y"}}</td>
+        <td style="border-style:solid;border-width:1px">{{work_day.time_start}}</td>
+        <td style="border-style:solid;border-width:1px">{{work_day.time_end}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<form method="POST">
+    {% csrf_token %}
+    <input type="date" name="date" placeholder="Дата"><br>
+    <input type="time" name="time_start" placeholder="Початок роботи"><br>
+    <input type="time" name="time_end" placeholder="Кінець роботи"><br>
+    <input type="submit" name="submit">
+</form>
+{% endblock content %}
