@@ -16,7 +16,7 @@ def services_handler(request):
         date__lte=datetime.datetime.today().replace(tzinfo=utc) + datetime.timedelta(days=7)).all()
     master_ids = []
     for name in calendars:
-        master_ids.append(Calendar.objects.filter(master=name.master).first().id)
+        master_ids.append(Calendar.objects.filter(master=name.master).first().master_id)
     available_masters = [name.id for name in Master.objects.filter(id__in=master_ids, status=True).all()]
     available_services = [service.id for service in Service.objects.filter(master__id__in=available_masters).distinct().all()]
     services = [name.name for name in Service.objects.filter(id__in=available_services).all()]
@@ -36,7 +36,7 @@ def specialist_handler(request):
         date__lte=datetime.datetime.today().replace(tzinfo=utc) + datetime.timedelta(days=7)).all()
     master_ids = []
     for name in calendars:
-        master_ids.append(Calendar.objects.filter(master=name.master).first().id)
+        master_ids.append(Calendar.objects.filter(master=name.master).first().master_id)
     available_masters = {row.id: row.name for row in Master.objects.filter(id__in=master_ids, status=True).all()}
     return render(request, "specialist.html", {'masters': available_masters})
 
