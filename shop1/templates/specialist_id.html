@@ -3,12 +3,12 @@
 {% block title %} Спеціаліст {{name}} {% endblock %}
 
 {% block content %}
-<b>Спеціаліст: </b> {{name}}
+<b>Майстер: </b> {{name}}
 <br><br>
-<b>Може виконувати послуги:</b>
+<b>Може виконувати такі послуги:</b>
 <br><br>
 {% for key, value in services.items %}
-<a href="/services/{{ key }}/">{{ value }}</a><br>
+<a href="/booking/{{ specialist_id }}/{{ key }}/">{{ value }}</a><br>
 {% endfor %}
 
 {% endblock content %}

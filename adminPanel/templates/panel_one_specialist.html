@@ -25,8 +25,11 @@
 </table>
 <form method="POST">
     {% csrf_token %}
+    <label for="date">Дата:</label>
     <input type="date" name="date" placeholder="Дата"><br>
+    <label for="time_start">Початок роботи:</label>
     <input type="time" name="time_start" placeholder="Початок роботи"><br>
+    <label for="time_end">Кінець роботи:</label>
     <input type="time" name="time_end" placeholder="Кінець роботи"><br>
     <input type="submit" name="submit">
 </form>

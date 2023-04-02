@@ -5,10 +5,10 @@
 {% block content %}
 <b>Послуга: </b> {{service_name}}
 <br><br>
-<b>Може виконуватися майстрами:</b>
+<b>Майстри, які надають таку послугу:</b>
 <br><br>
 {% for key, value in masters.items %}
-<a href="/specialist/{{ key }}/">{{ value }}</a><br>
+<a href="/booking/{{key}}/{{ service_id }}/">{{ value }}</a><br>
 {% endfor %}
 
 {% endblock content %}

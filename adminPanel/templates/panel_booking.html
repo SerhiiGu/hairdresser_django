@@ -6,6 +6,6 @@
 {% for booking in bookings %}
     {{booking.master}}&emsp;
     {{booking.service}}&emsp;
-    {{booking.date}}<br>
+    {{booking.date|date:'Y-m-d H:i'}}<br>
 {% endfor %}
 {% endblock content %}

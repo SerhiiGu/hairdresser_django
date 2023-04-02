@@ -21,6 +21,7 @@
 <b>Додати спеціаліста:</b>
 <br><br>
 
+{% if services %}
 <form method="POST">
     {% csrf_token %}
     <input type="text" name="name" placeholder="Ім'я та прізвище"><br>
@@ -39,4 +40,8 @@
     {% endfor %} <br>
     <input type="submit" name="submit">
 </form>
+{% else %}
+    Додавання майстра без сервісів неможливе!<br>
+    Спочатку додайте сервіси в відповідному меню Адмінпанелі!
+{% endif %}
 {% endblock content %}

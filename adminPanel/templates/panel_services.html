@@ -27,7 +27,7 @@
     {% csrf_token %}
     <input type="text" name="name" placeholder="Назва сервісу"><br>
     <input type="number" name="price" placeholder="Ціна"><br>
-    <input type="number" name="time" placeholder="Час виконанння"><br>
+    <input type="number" name="time" step="15" placeholder="Час виконанння"><br>
     <input type="submit" name="submit">
 </form>
 {% endblock content %}

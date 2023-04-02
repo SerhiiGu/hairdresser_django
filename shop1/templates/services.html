@@ -3,7 +3,7 @@
 {% block title %} Список послуг {% endblock %}
 
 {% block content %}
-<b>Список доступних сервісів:</b>
+<b>Виберіть послугу, яку бажаєте отримати:</b>
 <br><br>
 {% for service, value in services_dict.items %}
 <a href="/services/{{ service }}/">{{ value }}</a><br>

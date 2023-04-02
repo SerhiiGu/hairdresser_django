@@ -6,22 +6,22 @@
 <form method="POST">
     {% csrf_token %}
 <!--    <input type="text" name="client" placeholder="Назвіться, будь-ласка"><br><br><br>-->
-    Записатися до спеціаліста:
-    <select name="master">
-        {% for master in masters %}
-        <option value="{{master.id}}">{{master.name}}</option>
-        {% endfor %} <br>
-    </select><br>
+    <i>Запис до майстра:</i> <b>{{master_name}}</b><br><br>
 
-    на послугу:
-    <select name="service">
-        {% for service in services %}
-        <option value="{{service.id}}">{{service.name}}</option>
-        {% endfor %} <br>
-    </select><br>
-    на дату:
-    <input type="datetime-local" name="date" placeholder="Дата"><br>
-    <input type="submit" name="submit">
+    <i>на послугу:</i> <b>{{service_name}}</b><br><br>
+
+    {% if free_work_slots %}
+        <i>Оберіть дату/час:</i>
+        <select name="date">
+            {% for free_slot in free_work_slots %}
+            <option value="{{free_slot|date:'Y-m-d H:i'}}">{{free_slot|date:"Y-m-d H:i"}}</option>
+            {% endfor %} <br>
+        </select><br><br>
+        <input type="submit" name="submit" value="Записатися">
+    {% else %}
+    неможливий. У майстра недостатньо вільного часу для цього.<br>
+    Будь-ласка оберіть іншого мастйра чи послугу.
+    {% endif %}
 </form>
 
 <br><br><br>Список бронювань знаходиться в адмінпанелі
