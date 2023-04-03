@@ -3,9 +3,26 @@
 {% block title %} Admin Panel - Список бронювань {% endblock %}
 
 {% block content %}
-{% for booking in bookings %}
-    {{booking.master}}&emsp;
-    {{booking.service}}&emsp;
-    {{booking.date|date:'Y-m-d H:i'}}<br>
+<table>
+    <thead>
+    <tr>
+        <th>Майстер</th>
+        <th>Сервіс</th>
+        <th>Дата/час</th>
+        <th>Ціна</th>
+        <th>Хвилин для виконання</th>
+    </tr>
+    </thead>
+    <tbody>
+        {% for booking in bookings %}
+        <tr>
+            <td align="center">{{booking.master}}</td>
+            <td align="center">{{booking.service}}</td>
+            <td align="center">{{booking.date|date:'Y-m-d H:i'}}</td>
+            <td align="center">{{booking.service.price}}</td>
+            <td align="center">{{booking.service.time}}</td>
+        </tr>
 {% endfor %}
+    </tbody>
+</table>
 {% endblock content %}

@@ -20,22 +20,26 @@ def panel_services(request):
 
 
 def panel_specialists(request):
+    without_service_selected = 0
     if request.method == 'POST':
-        master = Master(
-            name=request.POST['name'],
-            phone=request.POST['phone'],
-            status=request.POST['status'],
-            rang=request.POST['rang']
-        )
-        master.save()
         services_ids = [value for key, value in request.POST.items() if key.startswith('service')]
-        for services_id in services_ids:
-            service = Service.objects.get(id=services_id)
-            master.services.add(service)
-        master.save()
+        if len(services_ids) > 0:
+            master = Master(
+                name=request.POST['name'],
+                phone=request.POST['phone'],
+                status=request.POST['status'],
+                rang=request.POST['rang']
+            )
+            master.save()
+            for services_id in services_ids:
+                service = Service.objects.get(id=services_id)
+                master.services.add(service)
+            master.save()
+        else:
+            without_service_selected = 1
     masters = Master.objects.all()
     services = Service.objects.all()
-    return render(request, 'panel_specialists.html', {'masters': masters, 'services': services})
+    return render(request, 'panel_specialists.html', {'masters': masters, 'services': services, 'without_service_selected': without_service_selected})
 
 
 def panel_one_specialist(request, specialist_id):

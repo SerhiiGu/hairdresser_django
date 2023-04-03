@@ -12,7 +12,7 @@
     {{ master.phone }}
     {{ master.rang }}<br> &emsp;&emsp;&emsp;
     {% for service in master.services.all %}
-        {{ service.name }}
+        {{ service.name }} |
     {% endfor %}
 <br>
 {% endfor %}
@@ -20,6 +20,11 @@
 <br><br>
 <b>Додати спеціаліста:</b>
 <br><br>
+
+{% if without_service_selected == 1 %}
+    Додавання майстра без жодного сервісу неможливе!<br>
+    Виберіть хоча б один сервіс при додаванні! <br><br>
+{% endif %}
 
 {% if services %}
 <form method="POST">
