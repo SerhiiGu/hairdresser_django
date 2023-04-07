@@ -13,7 +13,8 @@ def root_handler(request):
 
 
 def services_handler(request):
-    calendars = Calendar.objects.filter(date__gte=datetime.datetime.today().replace(tzinfo=utc),
+    calendars = Calendar.objects.filter(date__gte=datetime.datetime.today().replace(
+        hour=0, minute=0, second=0, microsecond=0, tzinfo=utc),
         date__lte=datetime.datetime.today().replace(tzinfo=utc) + datetime.timedelta(days=7)).all()
     master_ids = []
     for name in calendars:
@@ -32,7 +33,8 @@ def service_id_handler(request, service_id):
 
 
 def specialist_handler(request):
-    calendars = Calendar.objects.filter(date__gte=datetime.datetime.today().replace(tzinfo=utc),
+    calendars = Calendar.objects.filter(date__gte=datetime.datetime.today().replace(
+        hour=0, minute=0, second=0, microsecond=0, tzinfo=utc),
         date__lte=datetime.datetime.today().replace(tzinfo=utc) + datetime.timedelta(days=7)).all()
     master_ids = []
     for name in calendars:
@@ -62,7 +64,8 @@ def service_booking_handler(request, specialist_id, service_id):
 
     master_name = Master.objects.filter(id=specialist_id, status=True).first().name
     service_name = Service.objects.filter(id=service_id).first().name
-    calendars = Calendar.objects.filter(date__gte=datetime.datetime.today().replace(tzinfo=utc),
+    calendars = Calendar.objects.filter(date__gte=datetime.datetime.today().replace(
+        hour=0, minute=0, second=0, microsecond=0, tzinfo=utc),
         date__lte=datetime.datetime.today().replace(tzinfo=utc) + datetime.timedelta(days=7),
         master_id=specialist_id).all()
     free_work_slots = []
