@@ -25,9 +25,9 @@
 </table>
 <form method="POST">
     {% csrf_token %}
-    <input type="text" name="name" placeholder="Назва сервісу"><br>
-    <input type="number" name="price" placeholder="Ціна"><br>
-    <input type="number" name="time" step="15" placeholder="Час виконанння"><br>
+    <input type="text" name="name" placeholder="Назва сервісу" required><br>
+    <input type="number" name="price" placeholder="Ціна" required><br>
+    <input type="number" name="time" step="15" placeholder="Час виконанння" required><br>
     <input type="submit" name="submit">
 </form>
 {% endblock content %}

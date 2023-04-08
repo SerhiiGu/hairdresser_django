@@ -29,8 +29,8 @@
 {% if services %}
 <form method="POST">
     {% csrf_token %}
-    <input type="text" name="name" placeholder="Ім'я та прізвище"><br>
-    <input type="text" name="phone" placeholder="Номер телефону"><br>
+    <input type="text" name="name" placeholder="Ім'я та прізвище" required><br>
+    <input type="number" name="phone" placeholder="Номер телефону" required><br>
     Статус: <select name="status">
         <option value="1">Активний</option>
         <option value="0">Неактивний</option>

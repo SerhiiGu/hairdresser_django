@@ -3,6 +3,9 @@ import datetime
 from django.test import TestCase
 from shop1.utils.periods_calc_tests import convert_period_to_set, calc_free_time_in_day
 
+from django.test import Client
+from shop1.models import Service, Master, Booking
+
 
 class PeriodsCalcTests(TestCase):
     def test_convert_period_to_set(self):
@@ -253,3 +256,19 @@ class PeriodsCalcTests(TestCase):
             datetime.datetime(2023, 5, 5, 10, 30)
         }
         self.assertSetEqual(result, expected_result)
+
+
+class TestBooking(TestCase):
+    def test_booking(self):
+        service_1 = Service(name="name 1", time=15, price=100)
+        service_1.save()
+        master = Master(name="Регіна", phone=38012234324, rang=1, status=1)
+        master.save()
+        master.services.add(service_1)
+        master.save()
+
+        c = Client()
+        response = c.post(f'/booking/{master.id}/{service_1.id}/', {"date": "2023-04-09 11:30"})
+        self.assertEqual(response.status_code, 200)
+        booking = Booking.objects.filter(master=master, service=service_1, date="2023-04-09 11:30")
+        self.assertEqual(len(booking), 1)
