@@ -3,32 +3,36 @@ from django.test import Client
 from shop1.models import Service, Master, Calendar
 
 
-class Test(TestCase):
+class TestAdminPanel(TestCase):
     def test_panel_services(self):
         c = Client()
-        response = c.post("/panel/services/", {"name": "Some service 1", "time": 45, "price": 500})
+        response = c.post("/panel/services/", {"name": "Стрижка жіноча", "time": 45, "price": 500})
         self.assertEqual(response.status_code, 200)
-        service = Service.objects.filter(name="Some service 1")
+        service = Service.objects.filter(name="Стрижка жіноча")
         self.assertEqual(len(service), 1)
 
     def test_panel_specialists(self):
-        srv1 = Service(name="name 1", time=15, price=100)
+        srv1 = Service(name="Стрижка бороди", time=15, price=100)
         srv1.save()
-        srv2 = Service(name="name 2", time=30, price=300)
+        srv2 = Service(name="Стрижка чоловіча", time=30, price=300)
         srv2.save()
-        # !!!!!!
+
         c = Client()
-        response = c.post("/panel/specialists/", {"name": "Регіна", "status": 1,
-                                                  "phone": 380671234567, "rang": 1, "service_1": 1, "service_2": 2})
+        response = c.post("/panel/specialists/", {"name": "Регіна",
+                                                  "status": 1,
+                                                  "phone": 380671234567,
+                                                  "rang": 1,
+                                                  "service_1": srv1.id,
+                                                  "service_2": srv2.id})
         self.assertEqual(response.status_code, 200)
 
         master = Master.objects.filter(name="Регіна")
         self.assertEqual(len(master), 1)
 
     def test_calendar_in_panel_one_specialist(self):
-        srv1 = Service(name="name 1", time=15, price=100)
+        srv1 = Service(name="Стрижка нова чоловіча", time=15, price=100)
         srv1.save()
-        master = Master(name="Регіна", phone=234324, rang=1, status=1)
+        master = Master(name="Оксана", phone=234324, rang=1, status=1)
         master.save()
         master.services.add(srv1)
         master.save()
@@ -42,5 +46,7 @@ class Test(TestCase):
         }
                           )
         self.assertEqual(response.status_code, 200)
+
         calendar = Calendar.objects.filter(master=f'{master.id}')
         self.assertEqual(len(calendar), 1)
+        self.assertEqual(master.name, "Оксана")

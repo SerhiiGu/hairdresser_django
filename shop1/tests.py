@@ -1,10 +1,14 @@
 import datetime
+import warnings
 
 from django.test import TestCase
 from shop1.utils.periods_calc_tests import convert_period_to_set, calc_free_time_in_day
 
 from django.test import Client
-from shop1.models import Service, Master, Booking
+from shop1.models import Service, Master, Booking, Calendar
+
+
+warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 
 class PeriodsCalcTests(TestCase):
@@ -260,15 +264,50 @@ class PeriodsCalcTests(TestCase):
 
 class TestBooking(TestCase):
     def test_booking(self):
-        service_1 = Service(name="name 1", time=15, price=100)
-        service_1.save()
-        master = Master(name="Регіна", phone=38012234324, rang=1, status=1)
-        master.save()
-        master.services.add(service_1)
-        master.save()
-
+        service1 = Service(name="Стрижка вусів", time=15, price=100)
+        service1.save()
+        master1 = Master(name="Регіна", phone=38012234324, rang=1, status=1)
+        master1.save()
+        master1.services.add(service1)
+        master1.save()
+        calendar1 = Calendar(master=master1, date="2023-04-09 00:00:00", time_start="11:00", time_end="13:00")
+        calendar1.save()
+    # Просте резервування
         c = Client()
-        response = c.post(f'/booking/{master.id}/{service_1.id}/', {"date": "2023-04-09 11:30"})
+        response = c.post(f'/booking/{master1.id}/{service1.id}/', {"date": "2023-04-09 11:30"})
         self.assertEqual(response.status_code, 200)
-        booking = Booking.objects.filter(master=master, service=service_1, date="2023-04-09 11:30")
+        booking = Booking.objects.filter(master=master1, service=service1, date="2023-04-09 11:30")
         self.assertEqual(len(booking), 1)
+    # Два резервування на різні проміжки
+        response = c.post(f'/booking/{master1.id}/{service1.id}/', {"date": "2023-04-09 11:00"})
+        self.assertEqual(response.status_code, 200)
+        booking = Booking.objects.filter(master=master1, service=service1, date="2023-04-09 11:00")
+        self.assertEqual(len(booking), 1)
+
+        response = c.post(f'/booking/{master1.id}/{service1.id}/', {"date": "2023-04-09 12:15"})
+        self.assertEqual(response.status_code, 200)
+        booking = Booking.objects.filter(master=master1, service=service1)
+        self.assertEqual(len(booking), 3)
+        # --------------------------------------------
+        service2 = Service(name="Стрижка супернова жіноча", time=45, price=500)
+        service2.save()
+        service3 = Service(name="Стрижка супернова чоловіча", time=30, price=250)
+        service3.save()
+        master2 = Master(name="Світлана Сайкович", phone=380661234567, rang=2, status=1)
+        master2.save()
+        master2.services.add(service2)
+        master2.save()
+        master2.services.add(service3)
+        master2.save()
+        calendar2 = Calendar(master=master2, date="2023-04-10 00:00:00", time_start="11:00", time_end="13:00")
+        calendar2.save()
+    # Тест на резерв, коли двоє завантажили сторінку одночасно і вибрали один час з одного слоту,
+    # проте один довго думав(сторінка була відкрита і не перезавантажувалася), і за цей час частину слоту зайняли
+        c = Client()
+        response = c.post(f'/booking/{master2.id}/{service2.id}/', {"date": "2023-04-10 11:30"})
+        self.assertEqual(response.status_code, 200)
+        booking = Booking.objects.filter(master=master2, service=service2, date="2023-04-10 11:30")
+        self.assertEqual(len(booking), 1)
+
+        response = c.post(f'/booking/{master2.id}/{service3.id}/', {"date": "2023-04-10 11:45"})
+        self.assertContains(response, "На жаль, даний проміжок часу чи його частина уже зайнята")

@@ -6,8 +6,13 @@
 <form method="POST">
     {% csrf_token %}
 <!--    <input type="text" name="client" placeholder="Назвіться, будь-ласка"><br><br><br>-->
-    <i>Запис до майстра:</i> <b>{{master_name}}</b><br><br>
 
+    {% if got_error == "slot is busy now" %}
+    <b>Виникла помилка!</b><br>
+    На жаль, даний проміжок часу чи його частина уже зайнята. Спробуйте обрати інший час.<br><br>
+    {% endif %}
+
+    <i>Запис до майстра:</i> <b>{{master_name}}</b><br><br>
     <i>на послугу:</i> <b>{{service_name}}</b><br><br>
 
     {% if free_work_slots %}

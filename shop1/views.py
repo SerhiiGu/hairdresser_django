@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.utils.timezone import utc
 
 from shop1.models import Service, Master, Calendar, Booking
-from shop1.utils.periods_calc import calc_free_time_in_day
+from shop1.utils.periods_calc import calc_free_time_in_day, get_free_slots_for_booking
 
 
 def root_handler(request):
@@ -50,29 +50,35 @@ def specialist_id_handler(request, specialist_id):
 
 
 def service_booking_handler(request, specialist_id, service_id):
-    if request.method == 'POST':
-        datetime_object = datetime.datetime.strptime(request.POST['date'], "%Y-%m-%d %H:%M")
-        booking = Booking(
-            master=Master.objects.get(id=specialist_id),
-            service=Service.objects.get(id=service_id),
-            # client=request.POST['client'],
-            client=1,
-            date=datetime_object
-        )
-        booking.save()
-        return render(request, "booking_complete.html")
-
     master_name = Master.objects.filter(id=specialist_id, status=True).first().name
     service_name = Service.objects.filter(id=service_id).first().name
-    calendars = Calendar.objects.filter(date__gte=datetime.datetime.today().replace(
-        hour=0, minute=0, second=0, microsecond=0, tzinfo=utc),
-        date__lte=datetime.datetime.today().replace(tzinfo=utc) + datetime.timedelta(days=7),
-        master_id=specialist_id).all()
-    free_work_slots = []
-    for workday in calendars:
-        service = Service.objects.get(id=service_id)
-        free_work_slots += calc_free_time_in_day(specialist_id, service, workday.date, workday.time_start, workday.time_end)
-    return render(request, 'booking.html', {'master_name': master_name, 'service_name': service_name, 'free_work_slots': free_work_slots})
+    if request.method == 'POST':
+        set_datetime_object = set()
+        datetime_object = datetime.datetime.strptime(request.POST['date'], "%Y-%m-%d %H:%M")
+        set_datetime_object.add(datetime_object)
+        free_work_slots = set(get_free_slots_for_booking(specialist_id, service_id))
+        if len(free_work_slots.intersection(set_datetime_object)) > 0:
+            booking = Booking(
+                master=Master.objects.get(id=specialist_id),
+                service=Service.objects.get(id=service_id),
+                # client=request.POST['client'],
+                client=1,
+                date=datetime_object
+            )
+            booking.save()
+            return render(request, "booking_complete.html")
+        else:
+            return render(request, 'booking.html', {
+                'master_name': master_name,
+                'service_name': service_name,
+                'free_work_slots': free_work_slots,
+                'got_error': "slot is busy now"})
+
+    free_work_slots = get_free_slots_for_booking(specialist_id, service_id)
+    return render(request, 'booking.html', {
+        'master_name': master_name,
+        'service_name': service_name,
+        'free_work_slots': free_work_slots})
 
 
 def user_page(request):

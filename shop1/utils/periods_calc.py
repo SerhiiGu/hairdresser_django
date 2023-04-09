@@ -1,6 +1,7 @@
 import datetime
 
 from shop1 import models
+from django.utils.timezone import utc
 
 
 def convert_period_to_set(time_start, time_end):
@@ -35,3 +36,15 @@ def calc_free_time_in_day(specialist, service, workdate_date, workday_time_start
         if no_intersection:
             free_time.append(time_start)
     return free_time
+
+
+def get_free_slots_for_booking(specialist_id, service_id):
+    calendars = models.Calendar.objects.filter(date__gte=datetime.datetime.today().replace(
+        hour=0, minute=0, second=0, microsecond=0, tzinfo=utc),
+        date__lte=datetime.datetime.today().replace(tzinfo=utc) + datetime.timedelta(days=7),
+        master_id=specialist_id).all()
+    free_work_slots = []
+    for workday in calendars:
+        service = models.Service.objects.get(id=service_id)
+        free_work_slots += calc_free_time_in_day(specialist_id, service, workday.date, workday.time_start, workday.time_end)
+    return free_work_slots
