@@ -3,6 +3,7 @@
 {% block title %} Admin Panel - Список спеціалістів {% endblock %}
 
 {% block content %}
+{% if not error %}
 <b>Список спеціалістів:</b>
 <br><br>
 
@@ -48,5 +49,7 @@
 {% else %}
     Додавання майстра без сервісів неможливе!<br>
     Спочатку додайте сервіси в відповідному меню Адмінпанелі!
+{% endif %}
+
 {% endif %}
 {% endblock content %}

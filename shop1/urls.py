@@ -11,5 +11,6 @@ urlpatterns = [
     path('booking/<int:specialist_id>/<int:service_id>/', shop1.views.service_booking_handler),
     path('user/', shop1.views.user_page),
     path('login/', shop1.views.login_handler, name='login'),
+    path('logout/', shop1.views.logout_handler, name='logout'),
     path('register/', shop1.views.register_handler, name='register'),
 ]

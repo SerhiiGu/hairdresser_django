@@ -4,6 +4,7 @@
 
 
 {% block content %}
+{% if not error %}
 <b>Графік роботи спеціаліста <i>{{shedule|first}}</i>:</b><br><br>
 <table>
     <thead>
@@ -33,4 +34,5 @@
     <input type="time" name="time_end" placeholder="Кінець роботи"><br>
     <input type="submit" name="submit">
 </form>
+{% endif %}
 {% endblock content %}

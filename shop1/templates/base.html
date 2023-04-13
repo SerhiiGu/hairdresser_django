@@ -7,6 +7,10 @@
 <body>
 {% include 'includes/head.html' %}
 
+{% if error %}
+<b>Виникла помилка:</b><br>{{error}}<br><br><br>
+
+{% endif %}
 {% block content %}
 {% endblock content %}
 

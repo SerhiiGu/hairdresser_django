@@ -9,4 +9,5 @@ urlpatterns = [
     path('specialist/<specialist_id>/', adminPanel.views.panel_one_specialist),
     path('booking/', adminPanel.views.panel_booking, name='panel_booking'),
     path('login/', adminPanel.views.panel_login, name='panel_login'),
+    path('logout/', adminPanel.views.panel_logout, name='panel_logout'),
     ]

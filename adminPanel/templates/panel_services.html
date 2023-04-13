@@ -3,6 +3,7 @@
 {% block title %} Admin Panel - Керування послугами {% endblock %}
 
 {% block content %}
+{% if not error %}
 <b>Список сервісів:</b>
 <br><br>
 <table>
@@ -30,4 +31,5 @@
     <input type="number" name="time" step="15" placeholder="Час виконанння" required><br>
     <input type="submit" name="submit">
 </form>
+{% endif %}
 {% endblock content %}

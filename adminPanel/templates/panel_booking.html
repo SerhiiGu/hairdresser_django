@@ -3,6 +3,7 @@
 {% block title %} Admin Panel - Список бронювань {% endblock %}
 
 {% block content %}
+{% if not error %}
 <table>
     <thead>
     <tr>
@@ -25,4 +26,5 @@
 {% endfor %}
     </tbody>
 </table>
+{% endif %}
 {% endblock content %}

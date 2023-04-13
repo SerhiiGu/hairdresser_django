@@ -1,11 +1,8 @@
-{% extends "base.html" %}
+{% extends "panel_base.html" %}
 
-{% block title %} Вхід в систему {% endblock %}
+{% block title %} Вхід в адмінку {% endblock %}
 
 {% block content %}
-{% if error %}
-<b>Виникла помилка:</b><br>{{error}}<br><br><br>
-{% endif %}
 
 <b>Форма для входу</b><br>
 <form method="POST">
