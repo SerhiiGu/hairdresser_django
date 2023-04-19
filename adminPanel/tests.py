@@ -1,11 +1,17 @@
 from django.test import TestCase
 from django.test import Client
 from shop1.models import Service, Master, Calendar
+from django.contrib.auth.models import User
 
 
 class TestAdminPanel(TestCase):
+    def setUp(self):
+        user = User.objects.create_user(username='admin1', password='QWE123admin1ASD')
+        user.save()
+
     def test_panel_services(self):
         c = Client()
+        c.login(username='admin1', password='QWE123admin1ASD')
         response = c.post("/panel/services/", {"name": "Стрижка жіноча", "time": 45, "price": 500})
         self.assertEqual(response.status_code, 200)
         service = Service.objects.filter(name="Стрижка жіноча")
@@ -18,6 +24,7 @@ class TestAdminPanel(TestCase):
         srv2.save()
 
         c = Client()
+        c.login(username='admin1', password='QWE123admin1ASD')
         response = c.post("/panel/specialists/", {"name": "Регіна",
                                                   "status": 1,
                                                   "phone": 380671234567,
@@ -38,6 +45,7 @@ class TestAdminPanel(TestCase):
         master.save()
 
         c = Client()
+        c.login(username='admin1', password='QWE123admin1ASD')
         response = c.post(f'/panel/specialist/{master.id}/', {
             "master": f'{master.id}',
             "date": "2023-04-07",
