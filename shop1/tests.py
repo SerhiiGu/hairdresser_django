@@ -264,37 +264,34 @@ class PeriodsCalcTests(TestCase):
 
 
 class TestBooking(TestCase):
+    fixtures = ['fixture1.json']
+
     def test_booking(self):
-        user = User.objects.create_user(username='user1', password='user123qweQWE')
-        user.save()
-        service1 = Service(name="Стрижка вусів", time=15, price=100)
-        service1.save()
+        service1 = Service.objects.filter(name__contains="Стрижка жіноча").first()
         master1 = Master(name="Регіна", phone=38012234324, rang=1, status=1)
         master1.save()
         master1.services.add(service1)
         master1.save()
-        calendar1 = Calendar(master=master1, date="2023-04-24 00:00:00", time_start="11:00", time_end="13:00")
+        calendar1 = Calendar(master=master1, date="2023-04-25 00:00:00", time_start="11:00", time_end="13:00")
         calendar1.save()
     # Просте резервування
         c = Client()
-        c.login(username='user1', password='user123qweQWE')
-        response = c.post(f'/booking/{master1.id}/{service1.id}/', {"date": "2023-04-24 11:30"})
+        c.login(username='user1', password='123qwe123')
+        response = c.post(f'/booking/{master1.id}/{service1.id}/', {"date": "2023-04-25 11:30"})
         self.assertEqual(response.status_code, 200)
-        booking = Booking.objects.filter(master=master1, service=service1, date="2023-04-24 11:30")
+        booking = Booking.objects.filter(master=master1, service=service1, date="2023-04-25 11:30")
         self.assertEqual(len(booking), 1)
     # Два резервування на різні проміжки
-        response = c.post(f'/booking/{master1.id}/{service1.id}/', {"date": "2023-04-24 11:00"})
+        response = c.post(f'/booking/{master1.id}/{service1.id}/', {"date": "2023-04-25 11:00"})
         self.assertEqual(response.status_code, 200)
-        booking = Booking.objects.filter(master=master1, service=service1, date="2023-04-24 11:00")
+        booking = Booking.objects.filter(master=master1, service=service1, date="2023-04-25 11:00")
         self.assertEqual(len(booking), 1)
 
-        response = c.post(f'/booking/{master1.id}/{service1.id}/', {"date": "2023-04-24 12:15"})
+        response = c.post(f'/booking/{master1.id}/{service1.id}/', {"date": "2023-04-25 12:15"})
         self.assertEqual(response.status_code, 200)
         booking = Booking.objects.filter(master=master1, service=service1)
         self.assertEqual(len(booking), 3)
         # --------------------------------------------
-        user = User.objects.create_user(username='user2', password='user890qweQWE')
-        user.save()
         service2 = Service(name="Стрижка супернова жіноча", time=45, price=500)
         service2.save()
         service3 = Service(name="Стрижка супернова чоловіча", time=30, price=250)
@@ -305,16 +302,16 @@ class TestBooking(TestCase):
         master2.save()
         master2.services.add(service3)
         master2.save()
-        calendar2 = Calendar(master=master2, date="2023-04-24 00:00:00", time_start="11:00", time_end="13:00")
+        calendar2 = Calendar(master=master2, date="2023-04-25 00:00:00", time_start="11:00", time_end="13:00")
         calendar2.save()
     # Тест на резерв, коли двоє завантажили сторінку одночасно і вибрали один час з одного слоту,
     # проте один довго думав(сторінка була відкрита і не перезавантажувалася), і за цей час частину слоту зайняли
         c = Client()
-        c.login(username='user2', password='user890qweQWE')
-        response = c.post(f'/booking/{master2.id}/{service2.id}/', {"date": "2023-04-24 11:30"})
+        c.login(username='user1', password='123qwe123')
+        response = c.post(f'/booking/{master2.id}/{service2.id}/', {"date": "2023-04-25 11:30"})
         self.assertEqual(response.status_code, 200)
-        booking = Booking.objects.filter(master=master2, service=service2, date="2023-04-24 11:30")
+        booking = Booking.objects.filter(master=master2, service=service2, date="2023-04-25 11:30")
         self.assertEqual(len(booking), 1)
 
-        response = c.post(f'/booking/{master2.id}/{service3.id}/', {"date": "2023-04-24 11:45"})
+        response = c.post(f'/booking/{master2.id}/{service3.id}/', {"date": "2023-04-25 11:45"})
         self.assertContains(response, "На жаль, даний проміжок часу чи його частина уже зайнята")

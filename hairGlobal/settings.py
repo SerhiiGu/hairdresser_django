@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_dump_load_utf8',
     'shop1.apps.Shop1Config',
     'adminPanel.apps.AdminpanelConfig',
 ]
