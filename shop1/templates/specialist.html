@@ -3,12 +3,13 @@
 {% block title %} Спеціалісти {% endblock %}
 
 {% block content %}
+{% if page_num != 0 %}
+    <b>Виберіть майстра, до якого бажаєте записатися:</b>
+    <br><br>
 
-<b>Виберіть майстра, до якого бажаєте записатися:</b>
-<br><br>
+    {% for index in pages %}
+        <a href="/specialist/{{ index }}/">{{ available_masters|get_item:index }}</a><br>
+    {% endfor %}
 
-{% for key, value in masters.items %}
-<a href="/specialist/{{ key }}/">{{ value }}</a><br>
-{% endfor %}
-
+{% endif %}
 {% endblock content %}

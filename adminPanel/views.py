@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.core.paginator import Paginator
 
 from shop1.models import Service, Master, Calendar, Booking
 
@@ -76,7 +77,13 @@ def panel_booking(request):
         return render(request, "panel_booking.html",
                       {"error": "Ви не увійшли, або ж не маєте прав для доступу до цієї сторінки"})
     bookings = Booking.objects.all()
-    return render(request, 'panel_booking.html', {'bookings': bookings})
+    page_num = request.GET.get('page', 1)
+    per_page = request.GET.get('per_page', 999)
+    error = ''
+    if (int(page_num) - 1) * int(per_page) > bookings.count():
+        error = f'Запит викодить за межі кількості записів в базі: {bookings.count()}'
+    pages = Paginator(bookings, per_page)
+    return render(request, 'panel_booking.html', {'bookings': pages.get_page(page_num).object_list, 'error': error})
 
 
 def panel_login(request):

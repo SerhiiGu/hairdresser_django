@@ -3,12 +3,19 @@ import datetime
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.utils.timezone import utc
+from django.template.defaulttags import register
 
 from shop1.models import Service, Master, Calendar, Booking
 from shop1.utils.periods_calc import get_free_slots_for_booking
+
+
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)
 
 
 def root_handler(request):
@@ -27,7 +34,17 @@ def services_handler(request):
     available_services = [service.id for service in Service.objects.filter(master__id__in=available_masters).distinct().all()]
     services = [name.name for name in Service.objects.filter(id__in=available_services).all()]
     services_dict = {service.id: service.name for service in Service.objects.filter(name__in=services).all()}
-    return render(request, "services.html", {'services_dict': services_dict})
+    page_num = request.GET.get('page', 1)
+    per_page = request.GET.get('per_page', 999)
+    error = ''
+    if (int(page_num) - 1) * int(per_page) > len(services_dict):
+        error = f'Запит викодить за межі кількості записів: {len(services_dict)}'
+        page_num = 0
+    pages = Paginator(tuple(services_dict), per_page)
+    return render(request, "services.html", {'pages': pages.get_page(page_num).object_list,
+                                             'page_num': page_num,
+                                             'services_dict': services_dict,
+                                             'error': error})
 
 
 @login_required(login_url='/login/')
@@ -54,7 +71,17 @@ def specialist_handler(request):
     for name in calendars:
         master_ids.append(Calendar.objects.filter(master=name.master).first().master_id)
     available_masters = {row.id: row.name for row in Master.objects.filter(id__in=master_ids, status=True).all()}
-    return render(request, "specialist.html", {'masters': available_masters})
+    page_num = request.GET.get('page', 1)
+    per_page = request.GET.get('per_page', 999)
+    error = ''
+    if (int(page_num) - 1) * int(per_page) > len(available_masters):
+        error = f'Запит викодить за межі кількості записів: {len(available_masters)}'
+        page_num = 0
+    pages = Paginator(tuple(available_masters), per_page)
+    return render(request, "specialist.html", {'pages': pages.get_page(page_num).object_list,
+                                               'page_num': page_num,
+                                               'available_masters': available_masters,
+                                               'error': error})
 
 
 @login_required(login_url='/login/')

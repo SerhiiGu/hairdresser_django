@@ -3,10 +3,13 @@
 {% block title %} Список послуг {% endblock %}
 
 {% block content %}
-<b>Виберіть послугу, яку бажаєте отримати:</b>
-<br><br>
-{% for service, value in services_dict.items %}
-<a href="/services/{{ service }}/">{{ value }}</a><br>
-{% endfor %}
+{% if page_num != 0 %}
+    <b>Виберіть послугу, яку бажаєте отримати:</b>
+    <br><br>
 
+    {% for index in pages %}
+        <a href="/services/{{ index }}/">{{ services_dict|get_item:index }}</a><br>
+    {% endfor %}
+
+{% endif %}
 {% endblock content %}
